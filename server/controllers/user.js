@@ -15,7 +15,7 @@ function singUp(req, res) {
     user.active = false;
 
     if (!password || !repeatPassword) {
-        res.status(404).send({ success: 0, message: "Las contraseñas con obligatorias" })
+        res.status(404).send({ success: 0, message: "Las contraseñas son obligatorias" })
     } else {
         if (password !== repeatPassword) {
             res.status(404).send({ success: 0, message: "Las contraseñas no coinciden" })
@@ -184,6 +184,79 @@ async function updateUser(req, res) {
     });
 };
 
+function activeUser(req, res) {
+    const { idUsuario } = req.params;
+    const { active } = req.body;
+    let text = active ? 'Activo' : 'Inactivo';
+
+    User.findByIdAndUpdate({ _id: idUsuario }, { active: active }, (error, result) => {
+        if (error) {
+            res.status(500).send({ success: 0, message: 'Error del servidor' });
+        } else {
+            if (!result) {
+                res.status(404).send({ success: 0, message: 'No se encotro el usuario.' });
+            } else {
+                res.status(200).send({ success: 1, message: `El usuario se ${text} con éxito.` });
+            };
+        };
+    });
+};
+
+function deleteUser(req, res) {
+    const { idUsuario } = req.params;
+
+    User.findByIdAndDelete({ _id: idUsuario }, (error, dataResult) => {
+        if (error) {
+            res.status(500).send({ success: 0, message: 'Error del servidor' });
+        } else {
+            if (!dataResult) {
+                res.status(404).send({ success: 0, message: 'No se encontro el usuario' });
+            } else {
+                res.status(200).send({ success: 1, message: 'Se elimino el usuario con exito' });
+            };
+        };
+    });
+};
+
+function createUser(req, res) {
+    const user = new User();
+    const { name, lastName, email, role, password } = req.body;
+    user.name = name;
+    user.lastName = lastName;
+    user.email = email.toLowerCase();
+    user.role = role;
+    user.active = true;
+
+    if (!password) {
+        return res.status(500).send({ success: 0, message: 'La contraseña es obligatoria' });
+    } else {
+        bcrypt.hash(password, null, null, (err, hash) => {
+            if (err) {
+                res.status(500).send({ success: 0, message: 'Error al encriptar la contraseña' });
+            } else {
+                if (!hash) {
+                    res.status(500).send({ success: 0, message: 'Error al encriptar la contraseña' });
+                } else {
+                    user.params = hash;
+                };
+            };
+        });
+    };
+
+    user.save((err, result) => {
+        if (err) {
+            res.status(500).send({ success: 0, message: 'El usuario ya existe' });
+        } else {
+            if (!result) {
+                res.status(500).send({ success: 0, message: 'Error al crear el usuario.' });
+            } else {
+                res.status(200).send({ success: 1, message: 'Se creo el usuario con exito', data: result });
+            };
+        };
+    });
+
+};
+
 module.exports = {
     singUp,
     signIn,
@@ -191,5 +264,8 @@ module.exports = {
     getUsersActive,
     uploadAvatar,
     getUrlAvatar,
-    updateUser
+    updateUser,
+    activeUser,
+    deleteUser,
+    createUser
 };

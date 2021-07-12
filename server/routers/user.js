@@ -13,5 +13,8 @@ api.get("/users-active", [md_auth.ensureAuth], UserController.getUsersActive);
 api.put("/upload-avatar/:idUsuario", [md_auth.ensureAuth, md_upload_avatar], UserController.uploadAvatar);
 api.get("/get-url-avatar/:avatarName", UserController.getUrlAvatar);
 api.put("/update-user/:idUsuario", [md_auth.ensureAuth], UserController.updateUser);
+api.put("/activate-user/:idUsuario", [md_auth.ensureAuth], UserController.activeUser);
+api.delete("/delete-user/:idUsuario", [md_auth.ensureAuth], UserController.deleteUser);
+api.post("/create-user", [md_auth.ensureAuth], UserController.createUser);
 
 module.exports = api;
