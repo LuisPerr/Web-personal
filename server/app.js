@@ -8,9 +8,11 @@ const { API_VERSION } = require('./config');
 const userRoutes = require('./routers/user');
 const authRoutes = require('./routers/auth');
 const menuRoutes = require('./routers/menu');
+const cursosRoutes = require('./routers/cursos');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '250mb', extended: true }))
+app.use(bodyParser.json({ limit: '250mb' }));
+app.use(bodyParser({ limit: '250mb' }));
 
 // configuracion del header de HTTP;
 app.use(function (req, res, next) {
@@ -26,5 +28,6 @@ app.use(function (req, res, next) {
 app.use(`/api/${API_VERSION}`, userRoutes);
 app.use(`/api/${API_VERSION}`, authRoutes);
 app.use(`/api/${API_VERSION}`, menuRoutes);
+app.use(`/api/${API_VERSION}`, cursosRoutes);
 
 module.exports = app;

@@ -1,4 +1,3 @@
-const menu = require('../models/menu');
 const Menu = require('../models/menu');
 
 function addMenu(req, res) {
@@ -69,9 +68,26 @@ function updateMenu(req, res) {
     });
 };
 
+function deleteMenu(req, res) {
+    const { idMenu } = req.params;
+
+    Menu.findByIdAndDelete({ _id: idMenu }, (error, dataResult) => {
+        if (error) {
+            res.status(500).send({ success: 0, message: 'Error del servidor' });
+        } else {
+            if (!dataResult) {
+                res.status(404).send({ success: 0, message: 'No se encontro el menu' });
+            } else {
+                res.status(200).send({ success: 1, message: 'Se elimino el menu con exito' });
+            };
+        };
+    });
+};
+
 module.exports = {
     addMenu,
     allMenus,
     allMenusByActive,
-    updateMenu
+    updateMenu,
+    deleteMenu
 };

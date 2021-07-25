@@ -7,6 +7,7 @@ const api = express.Router();
 api.post('/add-menu', [md_auth.ensureAuth], MenuController.addMenu);
 api.get('/all-menu', MenuController.allMenus);
 api.post('/all-menu-active', [md_auth.ensureAuth], MenuController.allMenusByActive);
-api.put('/update-menu/:idMenu', [md_auth.ensureAuth], MenuController.updateMenu)
+api.put('/update-menu/:idMenu', [md_auth.ensureAuth], MenuController.updateMenu);
+api.delete("/delete-menu/:idMenu", [md_auth.ensureAuth], MenuController.deleteMenu);
 
 module.exports = api;
