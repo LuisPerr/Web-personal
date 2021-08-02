@@ -11,10 +11,7 @@ function addCursos(req, res) {
     curso.siteUrl = siteUrl;
     curso.active = active;
 
-    console.log('saveUrl', saveUrl);
-    //console.log('imageBase64', imageBase64);
-
-    fs.writeFile(`${saveUrl}imagen.png`, imageBase64, 'base64', function (err) {
+    fs.writeFile(`${saveUrl}`, imageBase64, 'base64', function (err) {
         if (err) {
             console.log('Error', err);
         };

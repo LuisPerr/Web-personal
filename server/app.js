@@ -9,6 +9,7 @@ const userRoutes = require('./routers/user');
 const authRoutes = require('./routers/auth');
 const menuRoutes = require('./routers/menu');
 const cursosRoutes = require('./routers/cursos');
+const parametrosRoutes = require('./routers/parametros');
 
 app.use(bodyParser.urlencoded({ limit: '250mb', extended: true }))
 app.use(bodyParser.json({ limit: '250mb' }));
@@ -29,5 +30,6 @@ app.use(`/api/${API_VERSION}`, userRoutes);
 app.use(`/api/${API_VERSION}`, authRoutes);
 app.use(`/api/${API_VERSION}`, menuRoutes);
 app.use(`/api/${API_VERSION}`, cursosRoutes);
+app.use(`/api/${API_VERSION}`, parametrosRoutes)
 
 module.exports = app;
