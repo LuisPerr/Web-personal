@@ -8,5 +8,7 @@ api.post('/add-cursos', [md_auth.ensureAuth], cursosController.addCursos);
 api.get('/all-cursos', cursosController.allCursos);
 api.put('/update-curso/:idCurso', [md_auth.ensureAuth], cursosController.updateCurso);
 api.delete("/delete-curso/:idCurso", [md_auth.ensureAuth], cursosController.deleteCurso);
+api.put('/active-curso/:idCurso', [md_auth.ensureAuth], cursosController.activeCurso);
+
 
 module.exports = api;

@@ -1,5 +1,6 @@
 const Curso = require('../models/cursos');
 const fs = require('fs');
+const saveImages = require('../utils/saveImages');
 
 function addCursos(req, res) {
     const { nombre, descripcion, saveUrl, imageUrl, siteUrl, active, imageBase64 } = req.body;
@@ -46,9 +47,31 @@ function allCursos(req, res) {
         });
 };
 
-function updateCurso(req, res) {
-    let cursoData = req.body;
+async function updateCurso(req, res) {
+    let { saveImage } = req.body;
     let params = req.params;
+    let cursoData = {};
+
+    if (saveImage) {
+        resImage = await saveImages.saveImage(req.body.imageBase64, req.body.saveUrl);
+        if (resImage.success) {
+            cursoData = {
+                nombre: req.body.nombre,
+                descripcion: req.body.descripcion,
+                imageUrl: req.body.imageUrl,
+                siteUrl: req.body.siteUrl
+            };
+        } else {
+            return res.status(500).send({ success: 0, message: 'Error del servidor' });
+        };
+    } else {
+        cursoData = {
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            siteUrl: req.body.siteUrl
+        };
+    };
+
     Curso.findByIdAndUpdate({ _id: params.idCurso }, cursoData, (err, resultCurso) => {
         if (err) {
             return res.status(500).send({ success: 0, message: 'Error del servidor' });
@@ -78,9 +101,27 @@ function deleteCurso(req, res) {
     });
 };
 
+function activeCurso(req, res) {
+    let { active } = req.body;
+    let params = req.params;
+
+    Curso.findByIdAndUpdate({ _id: params.idCurso }, { active: active }, (err, resultCurso) => {
+        if (err) {
+            return res.status(500).send({ success: 0, message: 'Error del servidor' });
+        } else {
+            if (!resultCurso) {
+                return res.status(404).send({ success: 0, message: 'No se encontro el curso' });
+            } else {
+                res.status(200).send({ success: 1, message: 'Curso actualizado con exito' });
+            };
+        };
+    });
+};
+
 module.exports = {
     addCursos,
     allCursos,
     updateCurso,
-    deleteCurso
+    deleteCurso,
+    activeCurso
 };
