@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 
 const app = express();
 const { API_VERSION } = require('./config');
@@ -10,10 +9,12 @@ const authRoutes = require('./routers/auth');
 const menuRoutes = require('./routers/menu');
 const cursosRoutes = require('./routers/cursos');
 const parametrosRoutes = require('./routers/parametros');
+const newsletterRoutes = require('./routers/newsletter');
+const coursesRoutes = require('./routers/courses');
 
-app.use(bodyParser.urlencoded({ limit: '250mb', extended: true }))
-app.use(bodyParser.json({ limit: '250mb' }));
-app.use(bodyParser({ limit: '250mb' }));
+app.use(express.urlencoded({ limit: '250mb', extended: true }))
+app.use(express.json({ limit: '250mb' }));
+app.use(express({ limit: '250mb' }));
 
 // configuracion del header de HTTP;
 app.use(function (req, res, next) {
@@ -30,6 +31,8 @@ app.use(`/api/${API_VERSION}`, userRoutes);
 app.use(`/api/${API_VERSION}`, authRoutes);
 app.use(`/api/${API_VERSION}`, menuRoutes);
 app.use(`/api/${API_VERSION}`, cursosRoutes);
-app.use(`/api/${API_VERSION}`, parametrosRoutes)
+app.use(`/api/${API_VERSION}`, parametrosRoutes);
+app.use(`/api/${API_VERSION}`, newsletterRoutes);
+app.use(`/api/${API_VERSION}`, coursesRoutes);
 
 module.exports = app;
